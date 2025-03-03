@@ -1,24 +1,17 @@
-import { useState, useEffect } from "react";
-import CityInput from "./components/CityInput/CityInput";
+import { useState } from "react";
 import getWeather from "./utils/weatherFunction";
-import WeatherData from "./interfaces/weater.interface";
+import {WeatherForecast} from "./interfaces/weater.interface";
+import WeaterCharts from "./components/WeaterCharts/WeaterCharts";
+import CardsWeather from "./components/CityInput/CardsWeather";
+
 
 function AppWeather() {
- // const [city, setCity] = useState('');
- const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+ const [weatherData, setWeatherData] = useState<WeatherForecast | null>(null);
 
- useEffect(() => {
-  if (weatherData && weatherData.main) {
-   
- const tempCelsius = weatherData.main.temp -273.15;
-   console.log("Temperature:", weatherData.main.temp);
-   
-   console.log("Temperature C:", tempCelsius);
-  }
- }, [weatherData]);
 
  async function onChange(cityName: string) {
   const data = await getWeather(cityName);
+  console.log(data);
   if (data) {
    setWeatherData(data);
   } else {
@@ -29,8 +22,9 @@ function AppWeather() {
  return (
   <>
    <h1>Погода плохая погооодаа погоода совсем никуда. Никуда никудааа не скрыыыться наам </h1>
-   <CityInput onChange={onChange} />
+    <CardsWeather weatherData={weatherData?.list} onChange={onChange} />
    <img src="https://openweathermap.org/img/wn/04n@2x.png" alt="" />
+   {weatherData && <WeaterCharts weatherData={weatherData.list}/>}
   </>
  );
 }
