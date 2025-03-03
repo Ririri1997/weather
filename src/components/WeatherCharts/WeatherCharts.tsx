@@ -13,6 +13,8 @@ import { WeatherForecastItem } from "../../interfaces/weater.interface";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import ChartWrapper from "./ChartWrapper.styles";
+import Switcher from "../Switcher/Switcher";
+
 
 
 export default function WeatherCharts() {
@@ -29,8 +31,10 @@ export default function WeatherCharts() {
  console.log(data);
  return (
   <ChartWrapper>
+   <Switcher onChange={(value) => console.log("Выбрано:", value)} />
+
   
-  {weatherData ? (<ResponsiveContainer width="60%" height={400}>
+  {weatherData ? (<ResponsiveContainer width="100%" height={400}>
    <LineChart data={data}>
     <CartesianGrid strokeDasharray="3 3" />
     <XAxis dataKey="formatTime" />

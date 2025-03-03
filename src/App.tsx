@@ -1,7 +1,7 @@
 
 import CardsWeather from "./components/CardsWeather/CardsWeather";
 import { Header } from "./components/Header/Header.styles";
-import { Title } from "./components/Title/Title.styles";
+import { H1, H2 } from "./components/Title/Title.styles";
 import Button from "./components/Button/Button.styles";
 import WeatherCharts from "./components/WeatherCharts/WeatherCharts";
 
@@ -15,10 +15,11 @@ function AppWeather() {
  return (
   <>
    <Header>
-    <Title>Узнай и сравни погоду в любых городах</Title>
+    <H1>Узнай и сравни погоду в любых городах</H1>
     <Button onClick={addCity}>Добавить город</Button>
    </Header>
    <CardsWeather/>
+   <H2>Прогноз на 6 дней</H2>
   <WeatherCharts />
   </>
  );
