@@ -1,25 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Input from "./Input.styles";
 import Button from "../Button/Button.styles";
 import { CardBody, CardHeader, CardsWrapper } from "../Card/Card.styles";
 import { WeatherForecastItem } from "../../interfaces/weater.interface";
+import convertToCelsius from "../../utils/convertToCelsius";
+import { Text } from "../Text/Text.styles";
+import { ImageStyled } from "../Image/Image.styles";
 
 interface CardsWeatherProps {
- weatherData?: WeatherForecastItem[]| null;
+ weatherData?: WeatherForecastItem[] | null;
  onChange: (city: string) => void;
 }
 
-export default function CardsWeather({ weatherData, onChange }: CardsWeatherProps) {
- const [city, setСity] = useState<string>("");
- const [temp, setTemp] = useState<number | null>(null);
+export default function CardsWeather({
+ weatherData,
+ onChange,
+}: CardsWeatherProps) {
+ const [city, setCity] = useState<string>("");
 
- useEffect(() => {
-  if (weatherData && weatherData.length > 0) {
-    setTemp(weatherData[0].main.temp - 273.15);
-  }
- }, [weatherData]);
  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  setСity(e.target.value);
+  setCity(e.target.value);
  };
 
  function save(e: React.FormEvent) {
@@ -28,10 +28,11 @@ export default function CardsWeather({ weatherData, onChange }: CardsWeatherProp
  }
  function reset(e: React.FormEvent) {
   e.preventDefault();
-  setСity('');
-  onChange('');
+  setCity("");
  }
 
+ const hasData = weatherData?.[0]?.main?.temp !== undefined;
+ console.log(hasData);
  return (
   <CardsWrapper>
    <div>
@@ -46,10 +47,30 @@ export default function CardsWeather({ weatherData, onChange }: CardsWeatherProp
       <img src="./trash-icon.svg" alt="button delete" />
      </Button>
     </CardHeader>
-    <CardBody>
-     {weatherData && <p>{temp}</p>}
-    </CardBody>
-    </div>
+    {weatherData?.[0]?.main?.temp !== undefined ? (
+     <CardBody $hasData={hasData}>
+      <Text size="large">{convertToCelsius(weatherData[0].main.temp)}°C</Text>
+      <ImageStyled
+       size="large"
+       src={`https://openweathermap.org/img/wn/${weatherData[0].weather[0].icon}@2x.png`}
+       alt="Temp image"
+      />
+      <Text size="small">{weatherData[0].main.pressure} давление</Text>
+      <Text size="small">{weatherData[0].main.humidity}% влажность</Text>
+      <Text size="small">{weatherData[0].wind.speed}м/с ветер</Text>
+      
+     </CardBody>
+    ) : (
+     <CardBody $hasData={hasData}>
+      <ImageStyled src="./cloud-sun.svg" alt="Cloud" />
+      <Text size="small" color="secondary" $textAlign="center">
+       Напиши название города,
+       <br />
+       чтобы увидеть погоду
+      </Text>
+     </CardBody>
+    )}
+   </div>
   </CardsWrapper>
  );
 }

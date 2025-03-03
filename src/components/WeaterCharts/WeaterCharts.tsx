@@ -6,29 +6,34 @@ import {
  Line,
  Legend,
  CartesianGrid,
- ResponsiveContainer
+ ResponsiveContainer,
 } from "recharts";
+import convertToCelsius from "../../utils/convertToCelsius";
+import { WeatherForecastItem, WeatherForecast } from "../../interfaces/weater.interface";
 
-export default function WeaterCharts({ weatherData }: any) {
- const data = weatherData.map((item: any) => ({
+interface Props {
+ weatherData: WeatherForecast;
+}
+export default function WeaterCharts({ weatherData }: Props) {
+ const data = weatherData.list.map((item: WeatherForecastItem) => ({
   time: item.dt,
-  temperatureCelsius: Math.round(item.main.temp-273.15),
+  temperatureCelsius: convertToCelsius(item.main.temp),
   pressure: item.main.pressure,
   humidity: item.main.humidity,
-  wind: item.main.speed,
-  formatTime: item.dt_txt
- }))
+  wind: item.wind.speed,
+  formatTime: item.dt_txt,
+ }));
  console.log(data);
  return (
   <ResponsiveContainer width="100%" height={400}>
-    <LineChart data={data}>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="formatTime" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Line type="monotone" dataKey="temperatureCelsius" stroke="#8884d8" />
-    </LineChart>
+   <LineChart data={data}>
+    <CartesianGrid strokeDasharray="3 3" />
+    <XAxis dataKey="formatTime" />
+    <YAxis />
+    <Tooltip formatter={(value) => [`${value}°C`]} />
+    <Legend />
+    <Line type="monotone" dataKey="temperatureCelsius" stroke="#8884d8" />
+   </LineChart>
   </ResponsiveContainer>
  );
 }

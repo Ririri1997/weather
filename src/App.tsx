@@ -10,9 +10,12 @@ function AppWeather() {
 
 
  async function onChange(cityName: string) {
+  if (!cityName.trim()) {
+   return 'Введите название города';
+ }
   const data = await getWeather(cityName);
-  console.log(data);
   if (data) {
+   console.log(data);
    setWeatherData(data);
   } else {
    console.error("No weather data found for city:", cityName);
@@ -21,10 +24,9 @@ function AppWeather() {
 
  return (
   <>
-   <h1>Погода плохая погооодаа погоода совсем никуда. Никуда никудааа не скрыыыться наам </h1>
+   <h1>Узнай и сравни погоду в любых городах</h1>
     <CardsWeather weatherData={weatherData?.list} onChange={onChange} />
-   <img src="https://openweathermap.org/img/wn/04n@2x.png" alt="" />
-   {weatherData && <WeaterCharts weatherData={weatherData.list}/>}
+   {weatherData && <WeaterCharts weatherData={weatherData}/>}
   </>
  );
 }

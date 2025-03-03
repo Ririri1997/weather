@@ -11,6 +11,7 @@ const GlobalStyled = createGlobalStyle`
 
   body {
    background: #F3F4F6;
+   padding: 32px;
   }
   
 `
