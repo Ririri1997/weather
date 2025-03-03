@@ -11,12 +11,13 @@ export const CardHeader = styled.form`
  border-radius: 24px 24px 0px 0px;
  background: #e4ebfa;
  display: grid;
- grid-template-columns: auto auto;
+ grid-template-columns: auto 44px;
+ grid-template-rows: 44px;
  gap: 10px;
 `;
 
 interface CardBodyProps {
- $hasData: boolean;
+ $hasData?: boolean;
 }
 
 export const CardBody = styled.div<CardBodyProps>`
@@ -25,11 +26,15 @@ export const CardBody = styled.div<CardBodyProps>`
  border-radius: 0px 0px 24px 24px;
  background: #ffffff;
  display: grid;
+ gap: ${({ $hasData }) =>
+  $hasData ? "16px" : "0px"};
  align-items: center;
+ grid-template-columns: ${({ $hasData }) =>
+  $hasData? "repeat(6, 1fr)" : "repeat(1, 1fr)"};
  grid-template-areas: ${({ $hasData }) =>
   $hasData
-   ? `"one two three three"
-         "four four five six"`
+   ? `"one one one two two two"
+      "three three four four five five"`
    : `"one"
       "two"`};
 `;

@@ -3,7 +3,7 @@ import styled from "styled-components";
 interface TextProps {
   color?: "primary" | "secondary";
   size?: "small" | "medium" | "large"; 
-  $textAlign?: "center" | "left"; 
+  $textAlign?: "center" | "left" | "right"; 
 }
 
 export const Text = styled.p<TextProps>`
@@ -12,6 +12,8 @@ export const Text = styled.p<TextProps>`
   text-align: ${({ $textAlign }) =>
    $textAlign === "center"
       ? "center"
+      : $textAlign === "right"?
+      "right"
       : "left"}; 
 
   font-size: ${({ size }) =>

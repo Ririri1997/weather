@@ -14,7 +14,7 @@ import { WeatherForecastItem, WeatherForecast } from "../../interfaces/weater.in
 interface Props {
  weatherData: WeatherForecast;
 }
-export default function WeaterCharts({ weatherData }: Props) {
+export default function WeatherCharts({ weatherData }: Props) {
  const data = weatherData.list.map((item: WeatherForecastItem) => ({
   time: item.dt,
   temperatureCelsius: convertToCelsius(item.main.temp),
