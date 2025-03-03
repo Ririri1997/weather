@@ -4,7 +4,7 @@ import { CardBody } from "../Card/Card.styles";
 
 
 interface ErrorMessageProps {
-  message: string;
+  message: string | null;
 }
 
 export default function ErrorMessage({ message }: ErrorMessageProps) {

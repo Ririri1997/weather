@@ -2,31 +2,45 @@ import { ChangeEvent } from "react";
 import Input from "./Input.styles";
 import Button from "../Button/Button.styles";
 import { CardHeader } from "../Card/Card.styles";
+import { getWeather, weatherDataActions } from "../../store/weatherData.slice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
 
-interface CityInputProps {
-  city: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.FormEvent) => void;
-  onReset: (e: React.FormEvent) => void;
-}
+export default function CityInput() {
+ const city = useSelector((s: RootState) => s.weatherData.city) ?? "";
+ const dispatch = useDispatch<AppDispatch>();
 
-export default function CityInput({
-  city,
-  onChange,
-  onSubmit,
-  onReset,
-}: CityInputProps) {
-  return (
-      <CardHeader onSubmit={onSubmit} onReset={onReset}>
-        <Input
-          value={city}
-          placeholder="Город"
-          onChange={onChange}
-          type="text"
-        />
-        <Button type="reset">
-          <img src="./trash-icon.svg" alt="button delete" />
-        </Button>
-      </CardHeader>
-  );
+ function handleChange(e: ChangeEvent<HTMLInputElement>) {
+  dispatch(weatherDataActions.setCity(e.target.value));
+ }
+ async function onSubmit(e: React.FormEvent) {
+  e.preventDefault();
+  dispatch(weatherDataActions.resetError());
+
+  try {
+   if (city) {
+    dispatch(getWeather(city.trim()));
+   }
+  } catch (e) {
+   console.error("Ошибка получения данных:", e);
+  }
+ }
+ return (
+  <CardHeader
+   onSubmit={onSubmit}
+   onReset={() => {
+    dispatch(weatherDataActions.resetWeatherData());
+   }}
+  >
+   <Input
+    value={city}
+    placeholder="Город"
+    onChange={handleChange}
+    type="text"
+   />
+   <Button type="reset" content="image">
+    <img src="./trash-icon.svg" alt="button delete" />
+   </Button>
+  </CardHeader>
+ );
 }

@@ -1,48 +1,26 @@
-import { useState } from "react";
 import { CardBody, CardsWrapper } from "../Card/Card.styles";
-import { WeatherForecastItem } from "../../interfaces/weater.interface";
 import { Text } from "../Text/Text.styles";
 import { ImageStyled } from "../Image/Image.styles";
 import CityInput from "../CityInput/CityInput";
 import WeatherInfo from "../WeatherInfo/WeatherInfo";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
-
-interface CardsWeatherProps {
- errorMessage?: string | null;
- weatherData?: WeatherForecastItem[] | null;
- onChange: (city: string) => void;
- resetError: () => void;
- resetWeatherData: () => void;
-}
-
-export default function CardsWeather({
- errorMessage = null,
- weatherData,
- onChange,
- resetError,
- resetWeatherData
-}: CardsWeatherProps) {
- const [city, setCity] = useState<string>("");
-
- const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  setCity(e.target.value);
- };
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 
- function save(e: React.FormEvent) {
-  e.preventDefault();
-  onChange(city);
- }
- function reset(e: React.FormEvent) {
-  e.preventDefault();
-  resetError();
-  resetWeatherData(); 
- }
+
+export default function CardsWeather() {
+
+
+ const  weatherData = useSelector((s:RootState)=> s.weatherData.weatherData?.list);
+ const  errorMessage = useSelector((s:RootState)=> s.weatherData.errorMessage)
+
+
 
  return (
   <CardsWrapper>
    <div>
-    <CityInput city={city} onChange={handleChange} onSubmit={save} onReset={reset}/>
+    <CityInput />
     {errorMessage ? (
      <ErrorMessage message={errorMessage}/>
     ) : weatherData ? (

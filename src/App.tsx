@@ -1,44 +1,25 @@
-import { useState } from "react";
-import getWeather from "./utils/weatherFunction";
-import { WeatherForecast } from "./interfaces/weater.interface";
-import WeaterCharts from "./components/WeatherCharts/WeatherCharts";
+
 import CardsWeather from "./components/CardsWeather/CardsWeather";
+import { Header } from "./components/Header/Header.styles";
+import { Title } from "./components/Title/Title.styles";
+import Button from "./components/Button/Button.styles";
+import WeatherCharts from "./components/WeatherCharts/WeatherCharts";
 
 function AppWeather() {
- const [weatherData, setWeatherData] = useState<WeatherForecast | null>(null);
- const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
- async function onChange(cityName: string) {
-  if (!cityName.trim()) {
-   return "Введите название города";
-  }
-  setErrorMessage(null);
-  const data = await getWeather(cityName.trim());
-  if (data) {
-   console.log(data);
-   setWeatherData(data);
-  } else {
-   console.error("No weather data found for city:", cityName);
-   setErrorMessage("Не нашли такой город");
-  }
+ function addCity() {
+  // Здесь будет добавляться город. При добавлении он будет сразу добавляться в локальное хранилище и в зависимости от количества добавленных городов (но до 4х) будет добавляться карточки CardsWeather с указанными городами. При количестве городов более 4х будет удаляться кнопка  <Button onClick={addCity}>Добавить город</Button>
+  // судя по всему уже желательно добавлять редакс для управления состояниеми
  }
- function resetError() {
-  setErrorMessage(null);
- }
- const resetWeatherData = () => {
-  setWeatherData(null);
-};
+
  return (
   <>
-   <h1>Узнай и сравни погоду в любых городах</h1>
-   <CardsWeather 
-    weatherData={weatherData?.list}
-    errorMessage={errorMessage}
-    onChange={onChange}
-    resetError={resetError}
-    resetWeatherData={resetWeatherData}
-   />
-   {weatherData && <WeaterCharts weatherData={weatherData} />}
+   <Header>
+    <Title>Узнай и сравни погоду в любых городах</Title>
+    <Button onClick={addCity}>Добавить город</Button>
+   </Header>
+   <CardsWeather/>
+  <WeatherCharts />
   </>
  );
 }
