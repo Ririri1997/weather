@@ -12,7 +12,7 @@ import { CardsWrapper } from "../Card/Card.styles";
 export default function CardsWeather() {
  const dispatch = useDispatch<AppDispatch>();
  const weatherData = useSelector((s: RootState) => s.weatherData.weatherData);
- const errorMessage = useSelector((s: RootState) => s.weatherData.errorMessage);
+ const errorMessages = useSelector((s: RootState) => s.weatherData.errorMessages);
  const selectedCities = useSelector(
   (s: RootState) => s.weatherData.selectedCities
  );
@@ -27,8 +27,8 @@ export default function CardsWeather() {
     }
   });
 }, []); 
-
-
+console.log(errorMessages);
+// здесь настроить логику с выводом ошибки и добавлением новой карточки без нее. То есть если с карточки город с ошибкой, то только эта карточка содержит ошибку. Может быть в selectedCities . Добавить молитву для работы кода хд
  return (
   <CardsWrapper>
    { selectedCities.length > 0 ? (
@@ -38,7 +38,14 @@ export default function CardsWeather() {
       {weatherData[city] ? (
        <WeatherInfo weatherData={weatherData[city].list} />
       ) : (
-       errorMessage ? <ErrorMessage message={errorMessage}/> : <EmptyCard /> 
+       errorMessages[city] ? (
+         <div>
+           <ErrorMessage message={errorMessages[city]} />
+         </div>
+       ) : (
+         <EmptyCard />
+       )
+
       )}
      </div>
     ))

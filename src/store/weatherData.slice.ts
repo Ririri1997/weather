@@ -40,14 +40,14 @@ export const getWeather = createAsyncThunk(
 export interface WeatherDataState {
  weatherData: { [city: string]: WeatherForecast };
  loading: boolean;
- errorMessage: string | null;
+ errorMessages: { [city: string]: string | null }; 
  selectedCities: string[];
 }
 
 const initialState: WeatherDataState = {
  weatherData: {},
  loading: false,
- errorMessage: null,
+ errorMessages: {},
  selectedCities: loadState(CITIES_PERSISTENT_STATE) ?? [],
 };
 
@@ -57,8 +57,8 @@ export const weatherDataSlice = createSlice({
  reducers: {
   // чистит ошибки. Еще не используется
   resetError: (state) => {
-   state.errorMessage = null;
-  }, // еще не используется
+   state.errorMessages = {};
+  }, 
   addEmptyCity: (state) => {
    state.selectedCities.push("");
   }, 
@@ -76,9 +76,12 @@ export const weatherDataSlice = createSlice({
    state.selectedCities = state.selectedCities.filter(
     (city) => city.trim() !== ""
    );
-   if (!state.selectedCities.includes(action.payload)) {
+   const error = pushCity(action.payload, CITIES_PERSISTENT_STATE);
+   if (error) {
+    state.errorMessage = error; 
+  } else if (!state.selectedCities.includes(action.payload)) {
     state.selectedCities.push(action.payload);
-   }
+  }
    saveState(state.selectedCities, CITIES_PERSISTENT_STATE);
   },
  },
@@ -86,7 +89,6 @@ export const weatherDataSlice = createSlice({
   builder
    .addCase(getWeather.pending, (state) => {
     state.loading = true;
-    state.errorMessage = null;
    })
    .addCase(getWeather.fulfilled, (state, action) => {
     if (action.payload) {
@@ -97,10 +99,11 @@ export const weatherDataSlice = createSlice({
     }
     state.loading = false;
    })
-   .addCase(getWeather.rejected, (state) => {
+   .addCase(getWeather.rejected, (state, action) => {
     state.loading = false;
-    state.errorMessage = "Не нашли такой город";
-   });
+    const city = action.meta.arg;
+    state.errorMessages[city] = "Не удалось загрузить данные для этого города";
+  });
  },
 });
 

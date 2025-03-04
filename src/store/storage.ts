@@ -17,14 +17,14 @@ export function saveState<T>(state: T, key: string) {
 }
 
 
+
 export function pushCity(newValue: string, key: string) {
  const existingData = localStorage.getItem(key);
  const updatedArray: string[] = existingData ? JSON.parse(existingData) : [];
 
  if (!newValue.trim()) return; 
  if (updatedArray.includes(newValue)) {
-   console.log("Такой город уже есть");
-   return; 
+   return "Такой город уже есть";
  }
 
  if (updatedArray.length >= 4) {

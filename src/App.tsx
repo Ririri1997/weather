@@ -18,7 +18,6 @@ function AppWeather() {
  useEffect(() => {
   if(selectedCities.length >=4){
    setEmptyCard(true);
-   console.log('enought', emptyCard);
    return
   }
   selectedCities.forEach((city) => {

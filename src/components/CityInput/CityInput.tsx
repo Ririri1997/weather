@@ -22,12 +22,15 @@ export default function CityInput({ city = null }: CityInputProps) {
 
  const onSubmit = (e: React.FormEvent) => {
   e.preventDefault();
-  if (inputValue.trim()) {
+  const formattedCity = inputValue.trim().toLocaleLowerCase()
+
+  if (formattedCity) {
    if(city){
     dispatch(weatherDataActions.removeCity(city));
    }
-   dispatch(getWeather(inputValue.trim()));
-   dispatch(weatherDataActions.addToLocale(inputValue.trim()));
+
+   dispatch(getWeather(formattedCity));
+   dispatch(weatherDataActions.addToLocale(formattedCity));
   }
  };
  return (
