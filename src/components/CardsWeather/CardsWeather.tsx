@@ -1,41 +1,53 @@
-import { CardBody, CardsWrapper } from "../Card/Card.styles";
-import { Text } from "../Text/Text.styles";
-import { ImageStyled } from "../Image/Image.styles";
 import CityInput from "../CityInput/CityInput";
 import WeatherInfo from "../WeatherInfo/WeatherInfo";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { useEffect } from "react";
+import { getWeather } from "../../store/weatherData.slice";
+import EmptyCard from "../EmptyCard/EmptyCard";
+import { CardsWrapper } from "../Card/Card.styles";
 
 
 export default function CardsWeather() {
+ const dispatch = useDispatch<AppDispatch>();
+ const weatherData = useSelector((s: RootState) => s.weatherData.weatherData);
+ const errorMessage = useSelector((s: RootState) => s.weatherData.errorMessage);
+ const selectedCities = useSelector(
+  (s: RootState) => s.weatherData.selectedCities
+ );
 
 
- const  weatherData = useSelector((s:RootState)=> s.weatherData.weatherData?.list);
- const  errorMessage = useSelector((s:RootState)=> s.weatherData.errorMessage)
+ useEffect(() => {
+  if (!selectedCities || selectedCities.length === 0) return;
 
+  selectedCities.forEach((city) => {
+    if (city !== "" && !weatherData[city]) {
+      dispatch(getWeather(city));
+    }
+  });
+}, []); 
 
 
  return (
   <CardsWrapper>
-   <div>
-    <CityInput />
-    {errorMessage ? (
-     <ErrorMessage message={errorMessage}/>
-    ) : weatherData ? (
-     <WeatherInfo weatherData={weatherData}/>
-    ) : (
-     <CardBody $hasData={false}>
-      <ImageStyled src="./cloud-sun.svg" alt="Cloud" />
-      <Text size="small" color="secondary" $textAlign="center">
-       Напиши название города,
-       <br />
-       чтобы увидеть погоду
-      </Text>
-     </CardBody>
-    )}
-   </div>
+   { selectedCities.length > 0 ? (
+    selectedCities.map((city) => (
+     <div key={city}>
+      <CityInput city={city} />
+      {weatherData[city] ? (
+       <WeatherInfo weatherData={weatherData[city].list} />
+      ) : (
+       errorMessage ? <ErrorMessage message={errorMessage}/> : <EmptyCard /> 
+      )}
+     </div>
+    ))
+   ) : (
+    <div>
+     <CityInput city={""} />
+    <EmptyCard /> 
+    </div>
+   )}
   </CardsWrapper>
  );
 }

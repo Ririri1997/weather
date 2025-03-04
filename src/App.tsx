@@ -1,26 +1,53 @@
-
 import CardsWeather from "./components/CardsWeather/CardsWeather";
 import { Header } from "./components/Header/Header.styles";
 import { H1, H2 } from "./components/Title/Title.styles";
 import Button from "./components/Button/Button.styles";
+import { useDispatch, useSelector } from "react-redux";
 import WeatherCharts from "./components/WeatherCharts/WeatherCharts";
+import { AppDispatch, RootState } from "./store/store";
+import { weatherDataActions } from "./store/weatherData.slice";
+import { useEffect, useState } from "react";
 
 function AppWeather() {
+ const [emptyCard, setEmptyCard] = useState<boolean>(false);
+ const selectedCities = useSelector(
+  (s: RootState) => s.weatherData.selectedCities
+ );
+ 
 
- function addCity() {
-  // Здесь будет добавляться город. При добавлении он будет сразу добавляться в локальное хранилище и в зависимости от количества добавленных городов (но до 4х) будет добавляться карточки CardsWeather с указанными городами. При количестве городов более 4х будет удаляться кнопка  <Button onClick={addCity}>Добавить город</Button>
-  // судя по всему уже желательно добавлять редакс для управления состояниеми
- }
+ useEffect(() => {
+  if(selectedCities.length >=4){
+   setEmptyCard(true);
+   console.log('enought', emptyCard);
+   return
+  }
+  selectedCities.forEach((city) => {
+   if (city ==="" ) {
+    setEmptyCard(true);
+   }else {
+    setEmptyCard(false);
+   }
+ });
+ }, [selectedCities]);
+ 
+ 
+ const dispatch = useDispatch<AppDispatch>();
+
+ const handleAddCity = () => {
+  if (!emptyCard) {
+   dispatch(weatherDataActions.addEmptyCity());
+  }
+ };
 
  return (
   <>
    <Header>
     <H1>Узнай и сравни погоду в любых городах</H1>
-    <Button onClick={addCity}>Добавить город</Button>
+    {!emptyCard && <Button onClick={() => handleAddCity()}>Добавить город</Button>}
    </Header>
-   <CardsWeather/>
+   <CardsWeather />
    <H2>Прогноз на 6 дней</H2>
-  <WeatherCharts />
+   <WeatherCharts />
   </>
  );
 }

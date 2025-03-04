@@ -1,39 +1,44 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import Input from "./Input.styles";
 import Button from "../Button/Button.styles";
 import { CardHeader } from "../Card/Card.styles";
 import { getWeather, weatherDataActions } from "../../store/weatherData.slice";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../store/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
 
-export default function CityInput() {
- const city = useSelector((s: RootState) => s.weatherData.city) ?? "";
+interface CityInputProps {
+ city?: string | null;
+}
+
+export default function CityInput({ city = null }: CityInputProps) {
+ const [inputValue, setInputValue] = useState(city || "");
+
  const dispatch = useDispatch<AppDispatch>();
-
+// при изменении мы должны так же перезаписывать вместо того города, который переписываем, заменять на новое значение То есть удалить город до и добавить город после 
  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-  dispatch(weatherDataActions.setCity(e.target.value));
- }
- async function onSubmit(e: React.FormEvent) {
-  e.preventDefault();
-  dispatch(weatherDataActions.resetError());
 
-  try {
-   if (city) {
-    dispatch(getWeather(city.trim()));
-   }
-  } catch (e) {
-   console.error("Ошибка получения данных:", e);
-  }
+  setInputValue(e.target.value);
  }
+
+ const onSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  if (inputValue.trim()) {
+   if(city){
+    dispatch(weatherDataActions.removeCity(city));
+   }
+   dispatch(getWeather(inputValue.trim()));
+   dispatch(weatherDataActions.addToLocale(inputValue.trim()));
+  }
+ };
  return (
   <CardHeader
    onSubmit={onSubmit}
    onReset={() => {
-    dispatch(weatherDataActions.resetWeatherData());
+    dispatch(weatherDataActions.removeCity(city || ""));
    }}
   >
    <Input
-    value={city}
+    value={inputValue}
     placeholder="Город"
     onChange={handleChange}
     type="text"
