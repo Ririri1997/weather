@@ -15,7 +15,6 @@ export const Input = styled.input`
 
 
   &:hover {
-  output: none; 
   border: none;
   }
 `;

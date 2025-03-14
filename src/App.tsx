@@ -10,9 +10,7 @@ import { useEffect, useState } from "react";
 
 function AppWeather() {
  const [emptyCard, setEmptyCard] = useState<boolean>(false);
- const selectedCities = useSelector(
-  (s: RootState) => s.weatherData.selectedCities
- );
+ const selectedCities = useSelector((s: RootState) => s.weatherData.selectedCities);
  
 
  useEffect(() => {

@@ -1,31 +1,36 @@
-import { useState } from "react";
+import { memo, useCallback } from "react";
 import { SwitcherContainer, SwitchButton } from "./Switcher.styled";
 
-
-const options = [
-  { label: "5 дней", value: "5d" },
-  { label: "1 день", value: "1d" },
-  { label: "4 часа", value: "4h" },
+interface SwitcherProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+const OPTIONS = [
+ { label: "5 дней", value: "5d" },
+ { label: "6 часов", value: "6h" },
+ { label: "3 часа", value: "3h" },
 ];
 
-export default function Switcher({ onChange }: { onChange: (value: string) => void }) {
-
- const [selected, setSelected] = useState("1d");
+const Switcher = ({ value, onChange }: SwitcherProps) => {
+ const handleClick = useCallback((newValue: string) => {
+   if (newValue !== value) {
+     onChange(newValue);
+   }
+ }, [value, onChange]);
 
  return (
    <SwitcherContainer>
-     {options.map((option) => (
+     {OPTIONS.map((option) => (
        <SwitchButton
          key={option.value}
-         $active={selected === option.value}
-         onClick={() => {
-           setSelected(option.value);
-           onChange(option.value);
-         }}
+         $active={value === option.value}
+         onClick={() => handleClick(option.value)}
        >
          {option.label}
        </SwitchButton>
      ))}
    </SwitcherContainer>
  );
-}
+};
+
+export default memo(Switcher);

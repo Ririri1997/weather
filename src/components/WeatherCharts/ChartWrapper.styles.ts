@@ -9,4 +9,8 @@ export const ChartWrapper = styled.div`
  gap: 16px;
  background: #ffffff;
 `;
-export default ChartWrapper;
+export const ChartTop = styled.div`
+ display: flex; 
+ justify-content: space-between;
+`;
+

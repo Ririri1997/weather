@@ -22,8 +22,8 @@ export const getWeather = createAsyncThunk(
    if (!data) {
     throw new Error("No forecast data found");
    }
-   // добавление в локальное хранилище
-   pushCity(cityName, CITIES_PERSISTENT_STATE);
+   
+   pushCity(cityName, CITIES_PERSISTENT_STATE); 
    return { cityName, data };
   } catch (error) {
    if (error) console.error("Ошибка получения данных:", error);
@@ -67,7 +67,6 @@ export const weatherDataSlice = createSlice({
    state.selectedCities = state.selectedCities.filter(
     (city) => city !== action.payload
    );
-   state.errorMessage = null;
    saveState(state.selectedCities, CITIES_PERSISTENT_STATE);
   }, 
   // добавляет новый элемент в selectedCities если его еще нет в этом списке после добавляется в локальное хранилище
@@ -77,11 +76,16 @@ export const weatherDataSlice = createSlice({
     (city) => city.trim() !== ""
    );
    const error = pushCity(action.payload, CITIES_PERSISTENT_STATE);
+   console.log(8);
    if (error) {
-    state.errorMessage = error; 
+    console.log(9);
+    console.log(error);
+    state.errorMessages[action.payload] = error; 
   } else if (!state.selectedCities.includes(action.payload)) {
+   console.log(10);
     state.selectedCities.push(action.payload);
   }
+  console.log(11);
    saveState(state.selectedCities, CITIES_PERSISTENT_STATE);
   },
  },

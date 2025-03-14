@@ -24,13 +24,15 @@ export function pushCity(newValue: string, key: string) {
 
  if (!newValue.trim()) return; 
  if (updatedArray.includes(newValue)) {
+  console.log(2);
    return "Такой город уже есть";
  }
 
  if (updatedArray.length >= 4) {
-   console.log("Достигнут лимит городов (4)");
+  console.log(3);
    return;
  }
+ console.log(4);
 
  updatedArray.push(newValue);
  localStorage.setItem(key, JSON.stringify(updatedArray));
